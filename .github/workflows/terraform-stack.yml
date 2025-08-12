@@ -103,11 +103,6 @@ on:
         default: 'main'
         required: false
         type: string
-      ntc_access_token:
-        description: 'Access token for NTC (Nuvibit Terraform Cloud) to use for terraform execution (requires "enable_terraform_execution" to be true)'
-        default: ''
-        required: false
-        type: string
     secrets:
       # GitHub App credentials to use instead of default GITHUB_TOKEN to avoid not triggering workflow runs on commit
       GH_APP_ID:
@@ -122,6 +117,9 @@ on:
       # (optional) Token for accessing private Terraform module registry (requires 'terraform_registry_hostname' to be set to a private registry)
       TERRAFORM_REGISTRY_TOKEN:
         required: false
+      # Github access token to get access to NTC (Nuvibit Terraform Collection) modules during terraform / opentofu execution (requires "enable_terraform_execution" to be true)
+      NTC_GITHUB_ACCESS_TOKEN:
+        required: true
 
 # Ensures that only one workflow runs at a time
 concurrency: ${{ inputs.concurrency_group }}
@@ -361,9 +359,9 @@ jobs:
           git config --global url."https://x-access-token:${{ steps.private_module_access.outputs.token }}@github.com/".insteadOf "https://github.com/"
 
       - name: Set Private NTC Module Access Token
-        if: ${{ inputs.ntc_access_token is set && inputs.ntc_access_token != '' }}
+        if: ${{ secrets.NTC_GITHUB_ACCESS_TOKEN is set && secrets.NTC_GITHUB_ACCESS_TOKEN != '' }}
         run: |
-         git config --global url."https://${{ inputs.ntc_access_token }}@github.com/nuvibit-terraform-collection".insteadOf "https://github.com/nuvibit-terraform-collection"
+         git config --global url."https://${{ secrets.NTC_GITHUB_ACCESS_TOKEN }}@github.com/nuvibit-terraform-collection".insteadOf "https://github.com/nuvibit-terraform-collection"
 
       - name: Checkout
         uses: actions/checkout@v4
