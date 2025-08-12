@@ -359,7 +359,9 @@ jobs:
           git config --global url."https://x-access-token:${{ steps.private_module_access.outputs.token }}@github.com/".insteadOf "https://github.com/"
 
       - name: Set Private NTC Module Access Token
-        if: ${{ secrets.NTC_GITHUB_ACCESS_TOKEN is set && secrets.NTC_GITHUB_ACCESS_TOKEN != '' }}
+        env:
+          NTC_GITHUB_ACCESS_TOKEN: ${{ secrets.NTC_GITHUB_ACCESS_TOKEN }}
+        if: ${{ env.NTC_GITHUB_ACCESS_TOKEN != '' }}
         run: |
          git config --global url."https://${{ secrets.NTC_GITHUB_ACCESS_TOKEN }}@github.com/nuvibit-terraform-collection".insteadOf "https://github.com/nuvibit-terraform-collection"
 
