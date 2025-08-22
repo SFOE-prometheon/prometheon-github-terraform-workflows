@@ -12,12 +12,6 @@ on:
         description: 'Name of the GitHub organisation owning the target repositories'
         required: true
         type: string
-
-      APP_ID:
-        description: 'ID of the GitHub app used to grant permission to trigger the workflows'
-        required: true
-        type: string
-
     secrets:
       GH_APP_ID:
         required: true
